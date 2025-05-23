@@ -1,0 +1,47 @@
+# Compiled binaries
+*.exe
+*.obj
+*.dll
+*.lib
+*.pdb
+*.ilk
+*.exp
+*.idb
+*.pch
+*.bsc
+*.sbr
+*.sdf
+*.ipch
+*.aps
+
+# Visual Studio
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.vs/
+Debug/
+Release/
+x64/
+x86/
+ARM/
+ipch/
+
+# VSCode
+.vscode/
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+build/
+
+# Misc
+*.log
+*.tmp
+*.bak
+*.swp
+Thumbs.db
+Desktop.ini
+.DS_Store

@@ -22,7 +22,7 @@ void addMenus(HWND hwnd);
 void checkboxFunctioning(int controlIdfixed, int controlIddynamic, HWND hwnd);
 DWORD WINAPI autoClick(LPVOID lpParam);
 
-LRESULT __stdcall k_Callback1(int nCode, WPARAM wParam, LPARAM lParam)
+LRESULT __stdcall k_Callback(int nCode, WPARAM wParam, LPARAM lParam)
 {
     PKBDLLHOOKSTRUCT key = (PKBDLLHOOKSTRUCT)lParam;
     //a key was pressed
@@ -53,27 +53,17 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 
     switch (msg)
     {
+
     case WM_CHAR:
         switch (wParam)
         {
         case 119:
-            //    working = !working;
-            //    if (working)
-            //    {
-            //        SetWindowText(startbutton, L"STOP");
-            //        CreateThread(NULL, 0, autoClick, hwnd, 0, NULL);
-            //        // autoClick(hwnd);
-            //         //start clicking based on value from textbox and on the location of the mouse
-            //    }
-            //    else
-            //    {
-            //        SetWindowText(startbutton, L"START");
-            //    }
-
-
+       
             break;
         }
         break;
+
+
     case WM_DESTROY:
     {
         PostQuitMessage(0);
@@ -183,7 +173,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     SetWindowPos(hwnd, 0, 700, 300, 600, 400, NULL);
 
     UpdateWindow(hwnd);
-    _k_hook = SetWindowsHookEx(WH_KEYBOARD_LL, k_Callback1, NULL, 0);
+    _k_hook = SetWindowsHookEx(WH_KEYBOARD_LL, k_Callback, NULL, 0);
     MSG msg = { 0 };
     while (GetMessage(&msg, NULL, 0, 0)) {
         TranslateMessage(&msg);
@@ -278,13 +268,24 @@ void checkboxFunctioning(int clickedId, int otherId, HWND hwnd)
 DWORD WINAPI autoClick( LPVOID lpParam)
 {
     HWND hwnd = (HWND)lpParam;
-    char buffer[20];
+    char buffer[20], bufferx[10], buffery[10];
     GetWindowTextA(inputNumbersField, buffer, 20);
     int period = atoi(buffer);
     if (period <= 200) period = 1000;
+        
+    GetWindowTextA(dynamicX, bufferx, 10);
+    GetWindowTextA(dynamicY, buffery, 10);
+    int xloc = atoi(bufferx);
+    int yloc = atoi(buffery);
+    if (xloc <= 0)
+        xloc = 500;
+    if (yloc <= 0)
+        yloc = 500;
+    
 
     INPUT inputs[2] = {};
-
+       
+     
        
             inputs[0].type = INPUT_MOUSE;
             inputs[0].mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
@@ -295,6 +296,11 @@ DWORD WINAPI autoClick( LPVOID lpParam)
             Sleep(500);
             while (working)
             {
+                LRESULT fixed = SendMessage(checkboxFixed, BM_GETCHECK, 0, 0);
+                if (fixed == BST_CHECKED)
+                {
+                    SetCursorPos(xloc, yloc);
+                }
                 SendInput(2, inputs, sizeof(INPUT));
                 Sleep(period);
             }
